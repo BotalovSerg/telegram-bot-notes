@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  bot:
+    build: .
+    env_file:
+      - .env
+    restart: "unless-stopped"
+    networks:
+      - my_networks
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:latest
+    env_file:
+      - .env.docker
+    ports:
+      - "5435:5432"
+    networks:
+      - my_networks
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+networks:
+  my_networks:
+    name: my_networks
