@@ -1,9 +1,9 @@
 from aiogram_dialog import Dialog
 
-from .dialog_add_note import start_dialog
+from .dialog_add_note import note_dialog
 
 
 def get_dialog() -> list[Dialog]:
     return [
-        start_dialog,
+        note_dialog,
     ]
