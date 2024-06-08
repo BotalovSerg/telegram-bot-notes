@@ -1,7 +1,7 @@
 from aiogram import Router
 
-from .basehandlers import router as base_router
-from .add_note import router as add_note_router
+from .base_handlers import router as base_router
+from .note_handlers import router as add_note_router
 
 
 def get_routes() -> list[Router]:
