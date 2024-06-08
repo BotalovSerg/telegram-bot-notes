@@ -3,27 +3,31 @@ from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.kbd import Next
 from aiogram_dialog.widgets.text import Format, Const
 from aiogram_dialog.widgets.input import TextInput
-from aiogram.fsm.context import FSMContext
 from aiogram_dialog.widgets.kbd import Button, Row
 
 from bot.states import FSMAddNote
 
 
-async def get_note(event_update: Update, state: FSMContext, dialog_manager: DialogManager, **kwargs):
-    print(dialog_manager.start_data)
+async def get_note(
+        event_update: Update,
+        dialog_manager: DialogManager,
+        **kwargs,
+) -> dict[str, str]:
     dialog_manager.dialog_data.update(note=event_update.message.text)
-    await state.update_data(note=event_update.message.text)
 
     return {"note": event_update.message.text}
 
 
-async def get_date(event_update: Update, state: FSMContext, **kwargs):
-    await state.update_data(date=event_update.message.text)
-    data_note = await state.get_data()
+async def get_date(
+        event_update: Update,
+        dialog_manager: DialogManager,
+        **kwargs,
+) -> dict[str, str]:
+    dialog_manager.dialog_data.update(date=event_update.message.text)
 
     return {
-        "note": data_note["note"],
-        "date": data_note["date"]
+        "note": dialog_manager.dialog_data["note"],
+        "date": dialog_manager.dialog_data["date"]
     }
 
 
@@ -32,21 +36,30 @@ async def save_dialog(
         button: Button,
         dialog_manager: DialogManager,
 ) -> None:
-    # data_note = await state.get_data()
-    # await message.answer(text="DONE")
-    # await state.clear()
-    await callback.message.answer(text="Save")
-    print(dialog_manager.start_data)
-    print(dialog_manager.dialog_data)
+
+    await callback.message.answer(
+        text=f"Save\n"
+             f"Текс заметки: {dialog_manager.dialog_data['note']}"
+             f"Дата: {dialog_manager.dialog_data['date']}"
+    )
     await dialog_manager.done()
 
 
-async def close_second_dialog(
+async def close_dialog(
         callback: CallbackQuery,
         button: Button,
         dialog_manager: DialogManager
 ) -> None:
+    await callback.message.answer(text="Отмена")
     await dialog_manager.done()
+
+
+async def edit_dialog(
+        callback: CallbackQuery,
+        button: Button,
+        dialog_manager: DialogManager
+) -> None:
+    await dialog_manager.switch_to(state=FSMAddNote.start)
 
 
 note_dialog = Dialog(
@@ -64,7 +77,7 @@ note_dialog = Dialog(
     Window(
         Format(
             'Отлично!\n'
-            'Твоя заметка: {note}\n'
+            'Текс заметки: {note}\n'
             'Теперь укажи время и дату или можешь просто написать '
             '"Сегодя", "Завтра" или "Всегда :)"'),
         TextInput(
@@ -77,22 +90,22 @@ note_dialog = Dialog(
     Window(
         Format(
             "Давате проверим содержание, перед сохранением\n"
-            "Дата: {date}"
-            "Содержание {note}"
+            "Дата: {date}\n"
+            "Содержание: {note}"
         ),
         Row(
             Button(
-                text=Const('Save!'),
+                text=Const('Save'),
                 id='button_1',
                 on_click=save_dialog),
             Button(
                 text=Const('Edit'),
                 id='button_2',
-                on_click=save_dialog),
+                on_click=edit_dialog),
             Button(
                 text=Const('Cancel'),
                 id='button_3',
-                on_click=close_second_dialog),
+                on_click=close_dialog),
         ),
         getter=get_date,
         state=FSMAddNote.date,
