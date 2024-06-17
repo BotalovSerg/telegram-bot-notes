@@ -4,6 +4,7 @@ from aiogram.filters import CommandStart, Command
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from bot.db.requests import create_user, get_user_by_id
+from bot.lexicon.lexicon_ru import LEXICON
 
 router = Router()
 
@@ -14,7 +15,7 @@ async def cmd_press_start(message: Message, session: AsyncSession) -> None:
     user_id = message.from_user.id
     await create_user(session, user_id, name_user)
 
-    await message.answer(text="Hello")
+    await message.answer(text=LEXICON['command'][message.text])
 
 
 @router.message(Command(commands="whoami"))
