@@ -6,6 +6,7 @@ from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Button, Row
 
 from bot.states import FSMAddNote
+from bot.db.requests import add_note
 
 
 async def get_note(
@@ -38,9 +39,12 @@ async def save_dialog(
 ) -> None:
 
     await callback.message.answer(
-        text=f"Save\n"
-             f"Текс заметки: {dialog_manager.dialog_data['note']}"
-             f"Дата: {dialog_manager.dialog_data['date']}"
+        text=f"Заметка сохранена\nДля того чтобы посмотреть Ваши земетки\nотправь команду /showallnotes")
+    print(callback.from_user.id)
+    await add_note(
+        session=dialog_manager.start_data["session"],
+        data_note=dialog_manager.dialog_data,
+        user_id=callback.from_user.id,
     )
     await dialog_manager.done()
 

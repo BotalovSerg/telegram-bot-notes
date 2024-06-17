@@ -21,6 +21,28 @@ async def create_user(session: AsyncSession, user_id: int, full_name: str) -> No
     await session.commit()
 
 
+async def add_note(session: AsyncSession, data_note: dict, user_id: int) -> None:
+    # await create_user(session, user_id)
+    note = Note(
+        note=data_note["note"],
+        date=data_note["date"],
+        telegram_id=user_id
+    )
+    session.add(note)
+    await session.commit()
+
+
+async def get_notes(session: AsyncSession, user_id: int):
+    res = await session.scalars(select(Note).where(Note.telegram_id == user_id))
+    return res.all()
+
+
+async def delete_note(session: AsyncSession, note_id: str) -> None:
+    obj = await session.scalar(select(Note).where(Note.note_id == note_id))
+    await session.delete(obj)
+    await session.commit()
+
+
 async def test_connection(session: AsyncSession):
     """
     Проверка соединения с СУБД
