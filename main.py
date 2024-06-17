@@ -14,6 +14,7 @@ from bot.config_data.config import settings
 from bot.handlers import get_routes
 from bot.dialogs import get_dialog
 from bot.db.requests import test_connection
+from bot.keyboards.set_menu import set_main_menu
 
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ async def main() -> None:
     )
     setup_dialogs(dp)
 
+    await set_main_menu(bot)
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
