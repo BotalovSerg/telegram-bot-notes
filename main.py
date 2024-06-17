@@ -9,6 +9,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
+from bot.middlewares import DbSessionMiddleware
 from bot.config_data.config import settings
 from bot.handlers import get_routes
 from bot.dialogs import get_dialog
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 async def main() -> None:
 
-    engine = create_async_engine(url=str(settings.db.url), echo=True)
+    engine = create_async_engine(url=str(settings.db.url), echo=False)
     session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
     async with session_maker() as session:
@@ -33,6 +34,7 @@ async def main() -> None:
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     dp: Dispatcher = Dispatcher(storage=storage)
+    dp.update.middleware(DbSessionMiddleware(session_pool=session_maker))
     dp.include_routers(
         *get_routes(),
         *get_dialog()
