@@ -39,7 +39,9 @@ async def save_dialog(
 ) -> None:
 
     await callback.message.answer(
-        text=f"Заметка сохранена\nДля того чтобы посмотреть Ваши земетки\nотправь команду /showallnotes")
+        text="Ваша заметка сохранена.\n"
+             "Для того чтобы посмотреть все земетки,"
+             "\nотправь команду /showallnotes")
     print(callback.from_user.id)
     await add_note(
         session=dialog_manager.start_data["session"],

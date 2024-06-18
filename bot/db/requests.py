@@ -37,9 +37,16 @@ async def get_notes(session: AsyncSession, user_id: int):
     return res.all()
 
 
+async def get_note_by_uuid_id(session: AsyncSession, note_id: str) -> Note | None:
+    note = await session.scalar(select(Note).where(Note.note_id == note_id))
+    return note
+
+
 async def delete_note(session: AsyncSession, note_id: str) -> None:
-    obj = await session.scalar(select(Note).where(Note.note_id == note_id))
-    await session.delete(obj)
+    existing_note = await get_note_by_uuid_id(session, note_id)
+    if existing_note is None:
+        return
+    await session.delete(existing_note)
     await session.commit()
 
 

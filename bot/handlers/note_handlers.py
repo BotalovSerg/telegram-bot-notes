@@ -5,10 +5,10 @@ from aiogram_dialog import DialogManager, StartMode
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from bot.states import FSMAddNote
-from bot.db.requests import get_notes, delete_note
+from bot.db.requests import get_notes, delete_note, get_note_by_uuid_id
 from bot.lexicon.lexicon_ru import LEXICON
 from bot.keyboards.notes_kb import create_notes_keyboard, create_edit_keyboard
-from bot.filters.filters import IsDelNoteCallbackData
+from bot.filters.filters import IsDelNoteCallbackData, IsIdNoteUUID
 
 router = Router()
 
@@ -65,3 +65,13 @@ async def process_del_notes_press(callback: CallbackQuery, session: AsyncSession
 async def process_cancel_press(callback: CallbackQuery) -> None:
     await callback.message.edit_text(text=LEXICON['command']['cancel_text'])
     await callback.answer(text='✅')
+
+
+@router.callback_query(IsIdNoteUUID())
+async def show_note(callback: CallbackQuery, session: AsyncSession) -> None:
+    data_note = await get_note_by_uuid_id(session, callback.data)
+    await callback.message.edit_text(
+        text=f'Date: {data_note.date}\n'
+             f'Note content: {data_note.note}',
+    )
+    await callback.answer()

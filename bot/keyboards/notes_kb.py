@@ -1,11 +1,10 @@
-from typing import Iterable
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot.lexicon.lexicon_ru import LEXICON
 from bot.db.models import Note
 
 
-def create_notes_keyboard(notes: Iterable[Note]) -> InlineKeyboardMarkup:
+def create_notes_keyboard(notes: list[Note]) -> InlineKeyboardMarkup:
     kb_builder = InlineKeyboardBuilder()
     for number, note in enumerate(notes, start=1):
         kb_builder.row(InlineKeyboardButton(
@@ -26,7 +25,7 @@ def create_notes_keyboard(notes: Iterable[Note]) -> InlineKeyboardMarkup:
     return kb_builder.as_markup()
 
 
-def create_edit_keyboard(notes: Iterable[Note]) -> InlineKeyboardMarkup:
+def create_edit_keyboard(notes: list[Note]) -> InlineKeyboardMarkup:
     kb_builder = InlineKeyboardBuilder()
     for number, note in enumerate(notes, start=1):
         kb_builder.row(InlineKeyboardButton(

@@ -18,7 +18,11 @@ async def cmd_press_start(message: Message, session: AsyncSession) -> None:
     await message.answer(text=LEXICON['command'][message.text])
 
 
-@router.message(Command(commands="whoami"))
-async def cmd_press_who_am_i(message: Message, session: AsyncSession) -> None:
+@router.message(Command(commands="help"))
+async def cmd_press_help(message: Message, session: AsyncSession) -> None:
     user_id = await get_user_by_id(session, message.from_user.id)
-    await message.answer(text=f"User: {message.from_user.full_name}, ID: {user_id.telegram_id}")
+    await message.answer(text=LEXICON['command'][message.text])
+    await message.answer(
+        text=f"\nInfo User:"
+             f"\nID: {user_id.telegram_id}"
+             f"\nFull name: {message.from_user.full_name}")
