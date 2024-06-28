@@ -26,3 +26,8 @@ async def cmd_press_help(message: Message, session: AsyncSession) -> None:
         text=f"\nInfo User:"
              f"\nID: {user_id.telegram_id}"
              f"\nFull name: {message.from_user.full_name}")
+
+
+@router.message(Command(commands="contact"))
+async def cmd_press_contact(message: Message, session: AsyncSession) -> None:
+    await message.answer(text=LEXICON['command'][message.text])
