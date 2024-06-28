@@ -6,9 +6,11 @@ from bot.db.models import Note
 
 def create_notes_keyboard(notes: list[Note]) -> InlineKeyboardMarkup:
     kb_builder = InlineKeyboardBuilder()
+    text_note: str
     for number, note in enumerate(notes, start=1):
+        text_note = note.note if len(note.note) < 20 else note.note[:20] + '...'
         kb_builder.row(InlineKeyboardButton(
-            text=f'{number}. Дата: {note.date} - {note.note[:30]}',
+            text=f'{number}. Дата: {note.date} - {text_note}',
             callback_data=str(note.note_id)
         ))
     kb_builder.row(
