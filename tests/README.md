@@ -26,5 +26,16 @@ config.set_main_option(
 ```
 Тестовая база данных в докере
 ```commandline
-docker run --rm -e POSTGRES_DB=bot_db -e POSTGRES_PASSWORD=botalov -e POSTGRES_USER=botalov -p 5433:5432 --name postgres_bot -d postgres
+docker run --rm -e POSTGRES_DB=bot_db -e POSTGRES_PASSWORD=botalov -e POSTGRES_USER=botalov -p 5433:5432 --name postgres_bot_test -d postgres
+```
+В файле tests/alembic.ini поправить рабочую директорию для миграции
+```
+# sys.path path, will be prepended to sys.path if present.
+# defaults to the current working directory.
+prepend_sys_path = ..
+```
+Создание миграции в папке tests
+```
+alembic revision --autogenerate -m "init"
+alembic upgrade head
 ```
