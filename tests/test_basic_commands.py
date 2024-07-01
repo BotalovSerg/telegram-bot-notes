@@ -37,3 +37,20 @@ async def test_cmd_start(dp: Dispatcher, bot: MockedBot) -> None:
     outgoing_message: TelegramType = bot.get_request()
     assert isinstance(outgoing_message, SendMessage)
     assert outgoing_message.text == LEXICON['command']['/start']
+
+
+@pytest.mark.asyncio
+async def test_cmd_contact(dp: Dispatcher, bot: MockedBot) -> None:
+    bot.add_result_for(
+        method=SendMessage,
+        ok=True,
+    )
+    message = get_message('/contact')
+    result = await dp.feed_update(
+        bot,
+        Update(message=message, update_id=1)
+    )
+    assert result is not UNHANDLED
+    outgoing_message: TelegramType = bot.get_request()
+    assert isinstance(outgoing_message, SendMessage)
+    assert outgoing_message.text == LEXICON['command']['/contact']
