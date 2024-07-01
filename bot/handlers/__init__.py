@@ -5,7 +5,7 @@ from .note_handlers import router as add_note_router
 from .admin_hendlers import router as admin_router
 
 
-def get_routes() -> list[Router]:
+def get_routers() -> list[Router]:
     return [
         base_router,
         add_note_router,

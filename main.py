@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from bot.middlewares import DbSessionMiddleware
 from bot.config_data.config import settings
-from bot.handlers import get_routes
+from bot.handlers import get_routers
 from bot.dialogs import get_dialog
 from bot.db.requests import test_connection
 from bot.keyboards.set_menu import set_main_menu
@@ -37,7 +37,7 @@ async def main() -> None:
     dp: Dispatcher = Dispatcher(storage=storage)
     dp.update.middleware(DbSessionMiddleware(session_pool=session_maker))
     dp.include_routers(
-        *get_routes(),
+        *get_routers(),
         *get_dialog()
     )
     setup_dialogs(dp)
