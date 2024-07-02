@@ -1,6 +1,6 @@
 services:
   bot:
-    build: .
+    image: "botalovserg/app-bot-docker"
     env_file:
       - .env
     restart: "unless-stopped"
