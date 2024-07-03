@@ -1,11 +1,17 @@
 services:
   bot:
     image: "botalovserg/app-bot-docker"
-    env_file:
-      - .env
+    # build:
+    #   context: .
+    # environment:
+    #   - APP_DB_URL=postgresql+asyncpg://botalov:botalov@db/bot_db
     restart: "unless-stopped"
+    volumes:
+      - "/home/botalov/mycode/telegram-bot-notes/.env:/app/.env"
     networks:
       - my_networks
+    command: ./run.sh
+
     depends_on:
       db:
         condition: service_healthy
