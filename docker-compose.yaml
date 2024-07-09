@@ -1,6 +1,6 @@
 services:
   bot:
-    image: "botalovserg/app-bot-docker"
+    image: "botalovserg/app-bot-docker:latest"
     # build:
     #   context: .
     # environment:
