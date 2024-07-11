@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class FSMAddNote(StatesGroup):
-    start = State()
+class AddNoteSG(StatesGroup):
     text_note = State()
-    date = State()
+    date_note = State()
+    check_note = State()
