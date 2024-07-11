@@ -24,8 +24,8 @@ async def create_user(session: AsyncSession, user_id: int, full_name: str) -> No
 async def add_note(session: AsyncSession, data_note: dict, user_id: int) -> None:
     # await create_user(session, user_id)
     note = Note(
-        note=data_note["note"],
-        date=data_note["date"],
+        note=data_note["text_note"],
+        date=data_note["date_note"],
         telegram_id=user_id
     )
     session.add(note)

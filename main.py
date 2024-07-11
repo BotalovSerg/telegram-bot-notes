@@ -6,13 +6,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram_dialog import setup_dialogs
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from bot.middlewares import DbSessionMiddleware
 from bot.config_data.config import settings
 from bot.handlers import get_routers
-from bot.dialogs import get_dialog
 from bot.db.requests import test_connection
 from bot.keyboards.set_menu import set_main_menu
 
@@ -38,9 +36,7 @@ async def main() -> None:
     dp.update.middleware(DbSessionMiddleware(session_pool=session_maker))
     dp.include_routers(
         *get_routers(),
-        *get_dialog()
     )
-    setup_dialogs(dp)
 
     await set_main_menu(bot)
     await bot.delete_webhook(drop_pending_updates=True)

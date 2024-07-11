@@ -41,3 +41,16 @@ def create_edit_keyboard(notes: list[Note]) -> InlineKeyboardMarkup:
         )
     )
     return kb_builder.as_markup()
+
+
+def save_note_keyboard() -> InlineKeyboardMarkup:
+    kb_builder = InlineKeyboardBuilder()
+    buttons: list[InlineKeyboardButton] = [
+        InlineKeyboardButton(text="Save", callback_data="save_note"),
+        InlineKeyboardButton(text="Cansel", callback_data="cancel_save_note"),
+    ]
+    kb_builder.row(
+        *buttons,
+        width=2
+    )
+    return kb_builder.as_markup()
