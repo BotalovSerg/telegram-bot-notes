@@ -5,7 +5,7 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.storage.redis import RedisStorage
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from bot.middlewares import DbSessionMiddleware
@@ -27,7 +27,7 @@ async def main() -> None:
         await test_connection(session)
     logger.info("Connect db")
 
-    storage: MemoryStorage = MemoryStorage()
+    storage = RedisStorage.from_url(str(settings.redis.dsn))
     bot: Bot = Bot(
         token=settings.bot.token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)

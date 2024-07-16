@@ -1,19 +1,22 @@
 services:
   bot:
-    # image: "botalovserg/app-bot-docker:latest"
-    build:
-      dockerfile: ./Dockerfile
+    image: "botalovserg/app-bot-docker:latest"
+    # build:
+    #   dockerfile: ./Dockerfile
     # environment:
     #   - APP_DB_URL=postgresql+asyncpg://botalov:botalov@db/bot_db
     restart: "unless-stopped"
     volumes:
       - "/home/botalov/mycode/telegram-bot-notes/.env:/app/.env"
+      - "bot-postgres:/var/lib/postgresql/data"
     networks:
-      - my_networks
+      - back-bot
     command: ./run.sh
 
     depends_on:
       db:
+        condition: service_healthy
+      redis_fsm:
         condition: service_healthy
   db:
     image: postgres:latest
@@ -22,14 +25,26 @@ services:
     ports:
       - "5435:5432"
     networks:
-      - my_networks
+      - back-bot
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  redis_fsm:
+    image: "redis:7"
+    restart: "unless-stopped"
+    networks:
+      - back-bot
+    healthcheck:
+        test: [ "CMD", "redis-cli","ping" ]
+    volumes:
+      - bot-redis:/data
+
+volumes:
+  bot-postgres:
+  bot-redis:
 
 networks:
-  my_networks:
-    name: my_networks
+  back-bot:
