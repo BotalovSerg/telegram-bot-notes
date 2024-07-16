@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from pydantic import PostgresDsn
+from pydantic import PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,6 +10,8 @@ class DatabaseConfig(BaseModel):
 class BotConfig(BaseModel):
     token: str
 
+class RedisConfig(BaseModel):
+    dsn: RedisDsn
 
 class AdminConfig(BaseModel):
     ids_list: list = [454793877]
@@ -24,6 +26,7 @@ class Settings(BaseSettings):
     )
     bot: BotConfig
     db: DatabaseConfig
+    redis: RedisConfig
     admins: AdminConfig = AdminConfig()
 
 settings = Settings()

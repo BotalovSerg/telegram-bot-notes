@@ -6,6 +6,7 @@
 - PostgreSQL
 - SQLAlchemy
 - Alembic
+- Redis (for fsm storage)
 
 # Инструкция по запуску
  - Скачать репозиторий
@@ -15,13 +16,16 @@
 
  `source .venv/bin/activate`
 
+ - Для poentry
+
+`poentry install`
+
  - Установить зависимости
 
  `pip install -r requirements.txt`
 
  - Запустить приложение командой: `python3 main.py`
- - В корневой директории создать файл .env и добавить токен бота. Токен бота. Можно взять у https://t.me/BotFather.
-пример заполения файла .env можно посмотреть в файле .env.exemple
+ - В корневой директории создать файл .env и добавить переменные окружения, как в примере .env.exemple. Токен бота можно взять у https://t.me/BotFather.
 
  - Для запуска приложения в docker контайнере выполните команду:
  `docker compose up -d`
@@ -34,7 +38,7 @@
 Описание работы приложения:
 - При запуске бота, появляется приветствие с кратким описание работы
 - Внизу находятся кнопки управления "Создать заметку", "Посмотреть все заметки", "Удалить заметку"
-- В левом нижнем углу находится интерктивное меню с командами /help, /addnote, /showallnotes, /contact
+- В левом нижнем углу находится интерктивное меню с командами /help, /settings, /contact
 
 
 ## Реализуемый функционал
@@ -71,12 +75,15 @@ or only db
 ```commandline
 docker compose up -d db
 ```
+Инициализация alembic
 ```commandline
 alembic init --template async bot/db/migrations
 ```
+Миграции
 ```commandline
 alembic revision --autogenerate -m "init"
 ```
+Применить миграции
 ```commandline
 alembic upgrade head
 ```

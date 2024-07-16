@@ -16,6 +16,7 @@ alembic = "^1.13.1"
 asyncpg = "^0.29.0"
 pytest = "^8.2.2"
 pytest-asyncio = "^0.23.7"
+redis = "^5.0.7"
 
 
 [tool.poetry.group.dev.dependencies]
